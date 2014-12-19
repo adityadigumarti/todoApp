@@ -66,4 +66,12 @@ public class TodoAppUtil {
             throw new ItemNotFoundException("Item not Found for id " + id);
         }
     }
+
+    public static String getTaskCompletionMessage(String taskName) {
+        return String.format("\"%s\" task has been marked as done.", taskName);
+    }
+
+    public static String getPhoneNumber() {
+        return "+15626733141";
+    }
 }

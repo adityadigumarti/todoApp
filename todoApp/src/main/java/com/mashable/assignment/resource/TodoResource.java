@@ -19,6 +19,7 @@ import com.mashable.assignment.exception.ItemNotFoundException;
 import com.mashable.assignment.repository.TodoItemRepository;
 import com.mashable.assignment.repository.TodoItemRepositoryFactory;
 import com.mashable.assignment.searchly.SearchlyClient;
+import com.mashable.assignment.twilo.TwiloClient;
 import com.mashable.assignment.util.TodoAppUtil;
 
 /**
@@ -95,6 +96,7 @@ public class TodoResource {
 
         todoItem.setDone(value);
         response.setStatus(Response.Status.NO_CONTENT.getStatusCode());
+        TwiloClient.sendText(TodoAppUtil.getTaskCompletionMessage(todoItem.getTitle()), TodoAppUtil.getPhoneNumber());
 
         return todoItem;
     }

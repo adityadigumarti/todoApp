@@ -3,6 +3,7 @@ package com.mashable.assignment.repository;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.stereotype.Component;
 
 import com.mashable.assignment.domain.TodoItem;
 import com.mashable.assignment.util.TodoAppUtil;
@@ -14,6 +15,7 @@ import com.mashable.assignment.util.TodoAppUtil;
  * @author diguma01
  * 
  */
+@Component
 public class TodoItemCacheRepository implements TodoItemRepository {
 
     private static Map<String, TodoItem> itemsCache = new ConcurrentHashMap<String, TodoItem>(100);
