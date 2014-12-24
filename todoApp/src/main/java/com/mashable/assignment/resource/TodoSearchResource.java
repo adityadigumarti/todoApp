@@ -1,5 +1,6 @@
 package com.mashable.assignment.resource;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -8,13 +9,25 @@ import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.mashable.assignment.searchly.SearchlyClient;
+import com.mashable.assignment.search.service.ElasticSearchClientService;
 
+/**
+ * Search Resource for Todo.
+ * 
+ * 
+ * @author Adi
+ * 
+ */
+@RolesAllowed("todoAppUser")
 @Path("todo/search")
 public class TodoSearchResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(TodoSearchResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TodoSearchResource.class);
+
+    @Autowired
+    private ElasticSearchClientService searchlyClientService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -22,7 +35,7 @@ public class TodoSearchResource {
     public String search(@PathParam("searchString") String searchString) {
         LOG.info("Searching for Search String " + searchString);
 
-        return SearchlyClient.search(searchString);
+        return searchlyClientService.search(searchString);
     }
 
 }

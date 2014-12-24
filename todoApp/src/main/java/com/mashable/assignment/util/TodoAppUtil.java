@@ -3,29 +3,27 @@ package com.mashable.assignment.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.uuid.EthernetAddress;
-import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.impl.TimeBasedGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.mashable.assignment.domain.TodoItem;
 import com.mashable.assignment.exception.BadRequestException;
 import com.mashable.assignment.exception.ItemNotFoundException;
 import com.mashable.assignment.repository.TodoItemRepository;
-import com.mashable.assignment.repository.TodoItemRepositoryFactory;
 
+@Component
 public class TodoAppUtil {
 
-    private static final TimeBasedGenerator gen = Generators.timeBasedGenerator(EthernetAddress.fromInterface());
-    private static TodoItemRepository todoItemRepository = TodoItemRepositoryFactory.getInstance();
+    private static final Logger LOG = LoggerFactory.getLogger(TodoAppUtil.class);
 
-    public static String generateUniqueId() {
-        return gen.generate().toString();
-    }
+    private String toNumber = "+15626733141";
 
-    public static void validateTodo(TodoItem todoItem) {
+    @Autowired
+    private TodoItemRepository mongoTodoItemRepository;
 
-    }
-
-    public static void validateCreateTodo(TodoItem todoItem) {
+    public void validateCreateTodo(TodoItem todoItem) {
         List<String> errors = null;
 
         if (todoItem.getBody() == null || todoItem.getTitle() == null) {
@@ -44,10 +42,10 @@ public class TodoAppUtil {
 
     }
 
-    public static void validateUpdateTodo(String id, TodoItem todoItem) {
+    public void validateUpdateTodo(String id, TodoItem todoItem) {
         // If the Id's URL and Body don't match throw an exception. id is not required in Body, but if present should be
         // consistent with the URL.
-        if (todoItemRepository.findById(id) == null) {
+        if (mongoTodoItemRepository.findById(id) == null) {
             throw new ItemNotFoundException("Item not Found for id " + id);
         }
 
@@ -61,17 +59,28 @@ public class TodoAppUtil {
 
     }
 
-    public static void isValidId(String id) {
-        if (todoItemRepository.findById(id) == null) {
+    public void isValidId(String id) {
+        if (mongoTodoItemRepository.findById(id) == null) {
             throw new ItemNotFoundException("Item not Found for id " + id);
         }
     }
 
-    public static String getTaskCompletionMessage(String taskName) {
+    public String getTaskCompletionMessage(String taskName) {
         return String.format("\"%s\" task has been marked as done.", taskName);
     }
 
-    public static String getPhoneNumber() {
-        return "+15626733141";
+    public String getPhoneNumber() {
+        return toNumber;
+    }
+
+    public synchronized void updateToNumber(String number) {
+        LOG.info(String.format("Updating the Phone Number for sending SMS Messages from %s to %s ", toNumber, number));
+
+        toNumber = "+1" + number;
+    }
+
+    public void validatePhoneNumber(String phoneNumber) {
+        // TODO Auto-generated method stub
+
     }
 }

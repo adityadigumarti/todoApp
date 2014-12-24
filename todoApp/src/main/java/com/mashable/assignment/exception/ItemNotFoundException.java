@@ -2,6 +2,11 @@ package com.mashable.assignment.exception;
 
 import javax.ws.rs.core.Response.Status;
 
+/**
+ * 
+ * @author A
+ * 
+ */
 public class ItemNotFoundException extends TodoApiException {
 
     private static final long serialVersionUID = 1L;

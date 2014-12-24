@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response.Status;
  * Base class for all TODO API Exceptions.
  * 
  * 
- * @author diguma01
+ * @author Adi
  * 
  */
 public class TodoApiException extends WebApplicationException {

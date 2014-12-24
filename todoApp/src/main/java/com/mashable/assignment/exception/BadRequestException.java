@@ -4,6 +4,12 @@ import java.util.List;
 
 import javax.ws.rs.core.Response.Status;
 
+/**
+ * 
+ * 
+ * @author Adi
+ * 
+ */
 public class BadRequestException extends TodoApiException {
 
     private static final long serialVersionUID = 1L;

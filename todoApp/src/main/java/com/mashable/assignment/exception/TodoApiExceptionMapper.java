@@ -7,6 +7,12 @@ import javax.ws.rs.ext.Provider;
 
 import com.mashable.assignment.domain.ErrorMessage;
 
+/**
+ * Maps Exception to Error message.
+ * 
+ * @author Adi
+ * 
+ */
 @Provider
 public class TodoApiExceptionMapper implements ExceptionMapper<TodoApiException> {
 
