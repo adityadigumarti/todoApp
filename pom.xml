@@ -101,12 +101,6 @@
 			<version>2.12.0</version>
 		</dependency>
 		
-		<dependency>
-    		<groupId>com.riffpie.common.testing</groupId>
-    		<artifactId>jersey-test-support</artifactId>
-    		<version>1.0</version>
-  		</dependency>
-		
     </dependencies>
 
     <build>
@@ -196,12 +190,6 @@
     	 	<id>sonatype</id>
      		<name>Sonatype Groups</name>
      		<url>https://oss.sonatype.org/content/groups/public/</url>
-   		</repository>
-   		
-   		<repository>
-   			<id>riffpie</id>
-   			<name>riffpie</name>
-   			<url>http://maven.riffpie.com/releases/</url>
    		</repository>
 	</repositories>
 

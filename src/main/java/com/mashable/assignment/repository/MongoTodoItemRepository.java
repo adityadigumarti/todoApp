@@ -2,6 +2,7 @@ package com.mashable.assignment.repository;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.bson.types.ObjectId;
@@ -15,6 +16,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 
 /**
  * Mongo Persistence Implementation.
@@ -33,8 +36,10 @@ public class MongoTodoItemRepository implements TodoItemRepository {
 
     public MongoTodoItemRepository() {
         try {
-            mongoClient = new MongoClient("localhost", 27017);
-            db = mongoClient.getDB("todoDB");
+            MongoCredential credential =
+                    MongoCredential.createMongoCRCredential("todoUser", "todoApp", "todoPassword".toCharArray());
+            mongoClient = new MongoClient(new ServerAddress("dogen.mongohq.com", 10040), Arrays.asList(credential));
+            db = mongoClient.getDB("todoApp");
         } catch (UnknownHostException e) {
             LOG.error("Exception instantiating Mongo DB", e);
             throw new InstantiationError("Exception instantiating Mongo DB");
