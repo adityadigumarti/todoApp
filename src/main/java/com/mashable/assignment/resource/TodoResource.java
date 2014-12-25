@@ -79,6 +79,8 @@ public class TodoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<TodoItem> listTodoItems() {
+        LOG.info("Logging - Inside Get ALL");
+        System.out.println("Inside print statement Get All");
         return mongoTodoItemRepository.findAll();
     }
 

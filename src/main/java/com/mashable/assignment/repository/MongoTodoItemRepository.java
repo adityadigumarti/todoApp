@@ -41,6 +41,8 @@ public class MongoTodoItemRepository implements TodoItemRepository {
             mongoClient = new MongoClient(new ServerAddress("dogen.mongohq.com", 10040), Arrays.asList(credential));
             db = mongoClient.getDB("todoApp");
         } catch (UnknownHostException e) {
+            System.out.println("Exception instantiating Mongo DB");
+            e.printStackTrace();
             LOG.error("Exception instantiating Mongo DB", e);
             throw new InstantiationError("Exception instantiating Mongo DB");
         }
