@@ -55,6 +55,8 @@
 		    <artifactId>jetty-util</artifactId>
 		    <version>${jetty.version}</version>
 		</dependency>
+        
+        
 
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>

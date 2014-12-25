@@ -11,14 +11,14 @@
     
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext.xml</param-value>
+        <param-value>classpath:applicationContext.xml</param-value>
     </context-param>    
 
     <servlet>
         <servlet-name>Jersey Web Application</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
-            <param-name>jersey.config.server.provider.packages</param-name>
+           <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>com.mashable.assignment</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
@@ -28,22 +28,4 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
     
-    <security-constraint>
-      <web-resource-collection>
-        <web-resource-name>REST calls</web-resource-name>
-        <url-pattern>/*</url-pattern>
-        <http-method>GET</http-method>
-		<http-method>POST</http-method>
-		<http-method>PUT</http-method>
-		<http-method>DELETE</http-method>
-     </web-resource-collection>
-      <auth-constraint>
-          <role-name>todoAppUser</role-name>
-      </auth-constraint>
-  </security-constraint>
-  
-  <login-config>
-		<auth-method>BASIC</auth-method>
-	</login-config>
-  
 </web-app>
