@@ -38,7 +38,7 @@
     		<version>1.0</version>
 		</dependency>
 	
-        <dependency>
+        <!-- <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
             <version>${jetty.version}</version>
@@ -51,6 +51,12 @@
             <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+		    <groupId>org.eclipse.jetty</groupId>
+		    <artifactId>jetty-util</artifactId>
+		    <version>${jetty.version}</version>
+		</dependency> -->
 
         <dependency>
             <groupId>org.glassfish.jersey.test-framework.providers</groupId>
@@ -59,11 +65,7 @@
             <scope>test</scope>
         </dependency>
         
-        <dependency>
-		    <groupId>org.eclipse.jetty</groupId>
-		    <artifactId>jetty-util</artifactId>
-		    <version>${jetty.version}</version>
-		</dependency>
+        
 		
 		<dependency>
 		    <groupId>com.fasterxml.uuid</groupId>
