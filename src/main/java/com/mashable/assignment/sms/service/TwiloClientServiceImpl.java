@@ -50,6 +50,8 @@ public class TwiloClientServiceImpl implements SmsClientService {
             // Since sending SMS is the final step, i am not rolling back the whole transaction because of an exception
             // here. Queuing the SMS messages and having a scheduler retry failures would be the right way to go.
             LOG.error("Exception sending SMS message to " + phoneNumber, tre);
+            tre.printStackTrace();
+            System.out.println("Exception sending SMS message to " + phoneNumber);
         }
     }
 

@@ -17,8 +17,13 @@ public class TodoApiException extends WebApplicationException {
     static final long serialVersionUID = 1L;
     private Status status;
 
+    public TodoApiException(String errorMessage, Status status, Throwable e) {
+        super(errorMessage, e, status);
+        this.status = status;
+    }
+
     public TodoApiException(String errorMessage, Status status) {
-        super(errorMessage);
+        super(errorMessage, status);
         this.status = status;
     }
 

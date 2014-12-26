@@ -25,6 +25,8 @@ import com.mashable.assignment.exception.TodoApiInternalError;
 @Service("searchlyClientService")
 public class SearchlyClientServiceImpl implements ElasticSearchClientService {
 
+    private static final String SEARCHLY_BODY = "body";
+    private static final String SEARCHLY_TITLE_HIGH_PRIORITY = "title^3";
     private static final String SEARCHLY_TYPE = "todoitem";
     private static final String SEARCHLY_INDEX = "todoitems";
 
@@ -41,7 +43,8 @@ public class SearchlyClientServiceImpl implements ElasticSearchClientService {
         try {
             getClient().execute(index);
         } catch (Exception e) {
-            throw new SearchClientException("Exception indexing Data for Search");
+            LOG.error("Exception indexing Data for Search", e);
+            throw new SearchClientException("Exception indexing Data for Search", e);
         }
 
     }
@@ -52,18 +55,19 @@ public class SearchlyClientServiceImpl implements ElasticSearchClientService {
 
         try {
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(searchString, "title^3", "body");
+            QueryBuilder queryBuilder =
+                    QueryBuilders.multiMatchQuery(searchString, SEARCHLY_TITLE_HIGH_PRIORITY, SEARCHLY_BODY);
             searchSourceBuilder.query(queryBuilder);
 
             Search search =
-                    (Search) new Search.Builder(searchSourceBuilder.toString()).addIndex("todoItems")
+                    (Search) new Search.Builder(searchSourceBuilder.toString()).addIndex(SEARCHLY_INDEX)
                             .addType(SEARCHLY_TYPE).build();
 
-            JestResult result = client.execute(search);
+            JestResult result = getClient().execute(search);
             resultString = result.getJsonString();
         } catch (Exception e) {
-            LOG.error("Exception executing search Query.");
-            throw new TodoApiInternalError();
+            LOG.error("Exception executing search Query", e);
+            throw new TodoApiInternalError(e);
         }
 
         return resultString;
@@ -85,18 +89,22 @@ public class SearchlyClientServiceImpl implements ElasticSearchClientService {
     @Override
     public void delete(String id) {
         try {
-            client.execute(new Delete.Builder(id).index(SEARCHLY_INDEX).type(SEARCHLY_TYPE).build());
+            getClient().execute(new Delete.Builder(id).index(SEARCHLY_INDEX).type(SEARCHLY_TYPE).build());
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new SearchClientException("Exception Deleting Data for Search");
+            throw new SearchClientException("Exception Deleting Data for Search", e);
         }
     }
 
     private JestClient getClient() {
         if (client == null) {
-            JestClientFactory factory = new JestClientFactory();
-            factory.setHttpClientConfig(new HttpClientConfig.Builder(connectionUrl).multiThreaded(true).build());
-            client = factory.getObject();
+            try {
+                JestClientFactory factory = new JestClientFactory();
+                factory.setHttpClientConfig(new HttpClientConfig.Builder(connectionUrl).multiThreaded(true).build());
+                client = factory.getObject();
+            } catch (Exception e) {
+                LOG.error("Exception Initializing Searchly Client", e);
+                throw new TodoApiInternalError("Exception Initializing Searchly Client", e);
+            }
         }
 
         return client;

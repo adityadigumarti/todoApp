@@ -80,7 +80,7 @@ public class TodoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<TodoItem> listTodoItems() {
         LOG.info("Logging - Inside Get ALL");
-        System.out.println("Inside print statement Get All");
+
         return mongoTodoItemRepository.findAll();
     }
 
@@ -88,6 +88,8 @@ public class TodoResource {
     @Consumes("application/json")
     @Produces("application/json")
     public TodoItem createTodoItem(TodoItem todoItem, @Context final HttpServletResponse response) {
+        LOG.info("Inside Create Todo Item - " + todoItem);
+
         todoAppUtil.validateCreateTodo(todoItem);
 
         searchlyClientService.add(todoItem);
@@ -113,8 +115,6 @@ public class TodoResource {
     }
 
     @PUT
-    @Consumes("application/json")
-    @Produces("application/json")
     @Path("/taskCompleted/{id}")
     public void updateTodoStatus(@PathParam("id") String id, @Context final HttpServletResponse response) {
         TodoItem todoItem = mongoTodoItemRepository.findById(id);
