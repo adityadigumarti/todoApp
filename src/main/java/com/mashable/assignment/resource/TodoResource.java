@@ -95,7 +95,10 @@ public class TodoResource {
         searchlyClientService.add(todoItem);
         mongoTodoItemRepository.insert(todoItem);
 
-        response.setStatus(Response.Status.CREATED.getStatusCode());
+        if (response != null) {
+            response.setStatus(Response.Status.CREATED.getStatusCode());
+        }
+
         return todoItem;
     }
 
@@ -140,9 +143,23 @@ public class TodoResource {
             throw new ItemNotFoundException("Item not Found for id " + id);
         }
 
-        response.setStatus(Response.Status.NO_CONTENT.getStatusCode());
+        LOG.info("Deleting TODO Item with id" + id);
+
         searchlyClientService.delete(id);
         mongoTodoItemRepository.delete(id);
+
+        if (response != null) {
+            response.setStatus(Response.Status.NO_CONTENT.getStatusCode());
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/search/{searchString}")
+    public String search(@PathParam("searchString") String searchString) {
+        LOG.info("Searching for Search String " + searchString);
+
+        return searchlyClientService.search(searchString);
     }
 
 }
