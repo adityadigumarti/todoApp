@@ -93,15 +93,15 @@ public class TodoResource {
 
         todoAppUtil.validateCreateTodo(todoItem);
 
-        searchlyClientService.add(todoItem);
+        mongoTodoItemRepository.insert(todoItem);
 
         // Since there are no transactions, we need to make sure we cleanup on exceptions.
         try {
-            mongoTodoItemRepository.insert(todoItem);
+            searchlyClientService.add(todoItem);
         } catch (Exception e) {
-            LOG.error("Exception while persisting data in DB", e);
+            LOG.error("Exception while creating serach index.", e);
             // Revert previous step
-            searchlyClientService.delete(todoItem.getId());
+            mongoTodoItemRepository.delete(todoItem.getId());
             throw new TodoApiInternalError(e);
         }
 
