@@ -28,7 +28,7 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
     
-    <security-constraint>
+    <!-- <security-constraint>
       <web-resource-collection>
         <web-resource-name>REST calls</web-resource-name>
         <url-pattern>/*</url-pattern>
@@ -49,6 +49,6 @@
   <login-config>
 		<auth-method>BASIC</auth-method>
 		 <realm-name>MyUserDatabase</realm-name>
-  </login-config>
+  </login-config>  -->
     
 </web-app>
