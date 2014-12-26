@@ -138,11 +138,19 @@ public class MongoTodoItemRepository implements TodoItemRepository {
     }
 
     @Override
-    public Collection<TodoItem> findAll() {
+    public Collection<TodoItem> findAll(boolean ignoreCompletedTasks) {
+
         Collection<TodoItem> list = new ArrayList<TodoItem>();
         DBCollection coll = getDB().getCollection(TODO_COLLECTION);
 
-        DBCursor cursor = coll.find();
+        DBCursor cursor = null;
+
+        if (ignoreCompletedTasks) {
+            BasicDBObject query = new BasicDBObject(TASK_STATUS, false);
+            cursor = coll.find(query);
+        } else {
+            cursor = coll.find();
+        }
 
         while (cursor.hasNext()) {
             list.add(getTodo(cursor.next()));

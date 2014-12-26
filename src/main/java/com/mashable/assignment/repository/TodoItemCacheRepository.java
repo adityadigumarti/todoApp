@@ -48,7 +48,7 @@ public class TodoItemCacheRepository implements TodoItemRepository {
     }
 
     @Override
-    public Collection<TodoItem> findAll() {
+    public Collection<TodoItem> findAll(boolean ignoreCompletedTasks) {
         return itemsCache.values();
     }
 
