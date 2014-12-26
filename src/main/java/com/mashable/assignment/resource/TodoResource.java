@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mashable.assignment.domain.TodoItem;
 import com.mashable.assignment.exception.ItemNotFoundException;
+import com.mashable.assignment.exception.TodoApiInternalError;
 import com.mashable.assignment.repository.TodoItemRepository;
 import com.mashable.assignment.search.service.ElasticSearchClientService;
 import com.mashable.assignment.sms.service.SmsClientService;
@@ -93,7 +94,16 @@ public class TodoResource {
         todoAppUtil.validateCreateTodo(todoItem);
 
         searchlyClientService.add(todoItem);
-        mongoTodoItemRepository.insert(todoItem);
+
+        // Since there are no transactions, we need to make sure we cleanup on exceptions.
+        try {
+            mongoTodoItemRepository.insert(todoItem);
+        } catch (Exception e) {
+            LOG.error("Exception while persisting data in DB", e);
+            // Revert previous step
+            searchlyClientService.delete(todoItem.getId());
+            throw new TodoApiInternalError(e);
+        }
 
         if (response != null) {
             response.setStatus(Response.Status.CREATED.getStatusCode());
@@ -108,10 +118,24 @@ public class TodoResource {
     @Path("/{id}")
     public void updateTodoItem(TodoItem todoItem, @PathParam("id") String id,
             @Context final HttpServletResponse response) {
+        TodoItem originalTodo = mongoTodoItemRepository.findById(id);
+
+        if (originalTodo == null) {
+            throw new ItemNotFoundException("Item not Found for id " + id);
+        }
+
         todoAppUtil.validateUpdateTodo(id, todoItem);
 
-        searchlyClientService.update(id, mongoTodoItemRepository.findById(id));
         mongoTodoItemRepository.update(id, todoItem);
+
+        try {
+            searchlyClientService.update(id, mongoTodoItemRepository.findById(id));
+        } catch (Exception e) {
+            LOG.error("Exception Updating in Searchly", e);
+            // Revert DB Update
+            mongoTodoItemRepository.update(id, originalTodo);
+            throw new TodoApiInternalError(e);
+        }
 
         response.setStatus(Response.Status.NO_CONTENT.getStatusCode());
 
@@ -128,9 +152,13 @@ public class TodoResource {
 
         // Update only if task is currently still pending. Else just ignore.
         if (!todoItem.isDone()) {
-            mongoTodoItemRepository.updateStatus(id, true);
-            twiloClientService.sendText(todoAppUtil.getTaskCompletionMessage(todoItem.getTitle()),
-                    todoAppUtil.getPhoneNumber());
+            try {
+                mongoTodoItemRepository.updateStatus(id, true);
+                twiloClientService.sendText(todoAppUtil.getTaskCompletionMessage(todoItem.getTitle()),
+                        todoAppUtil.getPhoneNumber());
+            } catch (Exception e) {
+                throw new TodoApiInternalError(e);
+            }
         }
 
         response.setStatus(Response.Status.NO_CONTENT.getStatusCode());
@@ -139,14 +167,24 @@ public class TodoResource {
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") String id, @Context final HttpServletResponse response) {
-        if (mongoTodoItemRepository.findById(id) == null) {
+        TodoItem originalTodoItem = mongoTodoItemRepository.findById(id);
+
+        if (originalTodoItem == null) {
             throw new ItemNotFoundException("Item not Found for id " + id);
         }
 
         LOG.info("Deleting TODO Item with id" + id);
 
         searchlyClientService.delete(id);
-        mongoTodoItemRepository.delete(id);
+
+        try {
+            mongoTodoItemRepository.delete(id);
+        } catch (Exception e) {
+            LOG.error("Exception deleting from DB", e);
+            // Insert back into Search Index to keep it consistent.
+            searchlyClientService.add(originalTodoItem);
+            throw new TodoApiInternalError(e);
+        }
 
         if (response != null) {
             response.setStatus(Response.Status.NO_CONTENT.getStatusCode());

@@ -53,10 +53,6 @@ public class TodoAppUtil {
     public void validateUpdateTodo(String id, TodoItem todoItem) {
         // If the Id's URL and Body don't match throw an exception. id is not required in Body, but if present should be
         // consistent with the URL.
-        if (mongoTodoItemRepository.findById(id) == null) {
-            throw new ItemNotFoundException("Item not Found for id " + id);
-        }
-
         if (todoItem.getId() != null && !id.equals(todoItem.getId())) {
             throw new BadRequestException(String.format("Id fields %s and %s are not the same.", id, todoItem.getId()));
         }

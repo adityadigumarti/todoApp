@@ -76,8 +76,6 @@ public class TodoResourceTest extends JerseyTest {
         try {
             String response = target().path("todo/search/" + title).request().get(String.class);
 
-            System.out.println(response);
-
             assertNotEquals(-1, response.indexOf(title));
 
         } catch (Exception e) {
@@ -173,7 +171,25 @@ public class TodoResourceTest extends JerseyTest {
     }
 
     @Test
-    public void step7_deleteTodoItem() {
+    public void step7_searchUpdatedTodoItem() {
+        enable(TestProperties.LOG_TRAFFIC);
+
+        boolean thrown = false;
+
+        try {
+            String response = target().path("todo/search/" + updatedTitle).request().get(String.class);
+            assertNotEquals(-1, response.indexOf(updatedTitle));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            thrown = true;
+        }
+
+        assertFalse(thrown);
+    }
+
+    @Test
+    public void step8_deleteTodoItem() {
         enable(TestProperties.LOG_TRAFFIC);
 
         boolean thrown = false;
