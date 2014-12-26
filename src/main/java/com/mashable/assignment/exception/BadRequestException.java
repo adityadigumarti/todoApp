@@ -5,7 +5,7 @@ import java.util.List;
 import javax.ws.rs.core.Response.Status;
 
 /**
- * 
+ * Exception thrown if the Request data is Invalid.
  * 
  * @author Adi
  * 

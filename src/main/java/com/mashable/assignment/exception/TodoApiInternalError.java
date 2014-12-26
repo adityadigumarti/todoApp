@@ -3,6 +3,8 @@ package com.mashable.assignment.exception;
 import javax.ws.rs.core.Response.Status;
 
 /**
+ * Exception thrown in case of Internal Errors.
+ * 
  * 
  * @author Adi
  * 

@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Todo Item.
  * 
- * @author diguma01
+ * @author Adi
  * 
  */
 @XmlRootElement

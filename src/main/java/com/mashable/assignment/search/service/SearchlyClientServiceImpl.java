@@ -22,6 +22,11 @@ import com.mashable.assignment.domain.TodoItem;
 import com.mashable.assignment.exception.SearchClientException;
 import com.mashable.assignment.exception.TodoApiInternalError;
 
+/**
+ * 
+ * @author Adi
+ * 
+ */
 @Service("searchlyClientService")
 public class SearchlyClientServiceImpl implements ElasticSearchClientService {
 

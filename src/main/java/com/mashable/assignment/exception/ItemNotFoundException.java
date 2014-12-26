@@ -3,6 +3,7 @@ package com.mashable.assignment.exception;
 import javax.ws.rs.core.Response.Status;
 
 /**
+ * Exception thrown if id specified is not available.
  * 
  * @author Adi
  * 

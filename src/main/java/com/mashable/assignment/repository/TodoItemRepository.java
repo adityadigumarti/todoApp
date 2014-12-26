@@ -56,6 +56,7 @@ public interface TodoItemRepository {
     /**
      * Returns all Todo Item's
      * 
+     * @param ignoreCompletedTasks
      * @return
      */
     public Collection<TodoItem> findAll(boolean ignoreCompletedTasks);

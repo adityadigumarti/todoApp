@@ -1,5 +1,6 @@
 package com.mashable.assignment.repository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,7 +50,17 @@ public class TodoItemCacheRepository implements TodoItemRepository {
 
     @Override
     public Collection<TodoItem> findAll(boolean ignoreCompletedTasks) {
-        return itemsCache.values();
+        Collection<TodoItem> todoItems = itemsCache.values();
+        if (ignoreCompletedTasks) {
+            todoItems = new ArrayList<TodoItem>();
+            for (TodoItem todoItem : todoItems) {
+                if (!todoItem.isDone()) {
+                    todoItems.add(todoItem);
+                }
+            }
+        }
+
+        return todoItems;
     }
 
     private String generateUniqueId() {

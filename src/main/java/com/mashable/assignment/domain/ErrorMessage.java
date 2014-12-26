@@ -1,5 +1,10 @@
 package com.mashable.assignment.domain;
 
+/**
+ * 
+ * @author Adi
+ * 
+ */
 public class ErrorMessage {
 
     private int status;
